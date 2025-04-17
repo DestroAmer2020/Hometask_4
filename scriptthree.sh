@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # Оновлення системи
 apt-get update -y
 apt-get upgrade -y
