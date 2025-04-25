@@ -1,28 +1,30 @@
 #!/bin/bash
-# Оновлення системи
 apt-get update -y
 apt-get upgrade -y
-
-# Встановлення acl (для доступів)
 apt-get install -y acl
 
-# Створення adminuser з паролем (через chpasswd — так працює на Ubuntu!)
+# Створення adminuser з паролем
 useradd -m adminuser
 echo "adminuser:adminuser" | chpasswd
-
-# Надання прав sudo
 usermod -aG sudo adminuser
+
+# Копіюємо SSH ключ з ubuntu
+mkdir -p /home/adminuser/.ssh
+cp /home/ubuntu/.ssh/authorized_keys /home/adminuser/.ssh/
+chown -R adminuser:adminuser /home/adminuser/.ssh
+chmod 700 /home/adminuser/.ssh
+chmod 600 /home/adminuser/.ssh/authorized_keys
 
 # Створення poweruser без пароля
 useradd -m poweruser
 passwd -d poweruser
 
-# Дозвіл poweruser на запуск iptables через sudo
+# Дозвіл на iptables
 echo 'poweruser ALL=(ALL) NOPASSWD: /usr/sbin/iptables' >> /etc/sudoers
 
-# Дозвіл лише poweruser бачити домашню директорію adminuser
+# Права доступу
 chmod 750 /home/adminuser
 setfacl -m u:poweruser:rx /home/adminuser
 
-# Символічне посилання на /etc/mtab у home/poweruser
+# Символічне посилання
 ln -s /etc/mtab /home/poweruser/mtab_link

@@ -11,17 +11,9 @@ man)
 - create softlink to file /etc/mtab in poweruser home directory (see ln manual)
 
 ## How to start
-1. aws ec2 run-instances \
-  --image-id ami-053b0d53c279acc90 \
-  --count 1 \
-  --instance-type t2.micro \
-  --key-name mykeylabak \
-  --security-group-ids sg-0675a190bdc57ffe0 \
-  --subnet-id subnet-0ff5acba047b6e671 \
-  --iam-instance-profile Name=adminEC2Profile \
-  --user-data file://scriptthree.sh
+1. ./AWSinstance.sh
 
-2. ssh -i "D:/urok/Mine_from_Univer_or_School/itstepuniver/ThirdCourse/IHT/KeyPem/mykeylabak.pem" ubuntu@<your-ip>
+2. ssh -i "D:/urok/Mine_from_Univer_or_School/itstepuniver/ThirdCourse/IHT/KeyPem/mykeylabak.pem" adminuser@<your-ip>
 
 3. Перевірка користувачів:
 grep adminuser /etc/passwd
