@@ -30,3 +30,5 @@ ls -l /home/poweruser/mtab_link
 
 7. Перевірка iptables для poweruser:
 sudo /usr/sbin/iptables -L
+
+* vim /var/log/cloud-init-output.log

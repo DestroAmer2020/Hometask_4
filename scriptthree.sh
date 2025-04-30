@@ -1,6 +1,8 @@
 #!/bin/bash
-apt-get update -y
-apt-get upgrade -y
+set -x
+
+DEBIAN_FRONTEND=noninteractive apt-get update -y
+DEBIAN_FRONTEND=noninteractive apt-get upgrade -y
 apt-get install -y acl
 
 # Створення adminuser з паролем
@@ -22,7 +24,7 @@ passwd -d poweruser
 # Дозвіл на iptables
 echo 'poweruser ALL=(ALL) NOPASSWD: /usr/sbin/iptables' >> /etc/sudoers
 
-# Права доступу
+# Доступ до home adminuser
 chmod 750 /home/adminuser
 setfacl -m u:poweruser:rx /home/adminuser
 
