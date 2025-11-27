@@ -1,32 +1,42 @@
 #!/bin/bash
 set -x
 
-DEBIAN_FRONTEND=noninteractive apt-get update -y
-DEBIAN_FRONTEND=noninteractive apt-get upgrade -y
+# Update system
+export DEBIAN_FRONTEND=noninteractive
+apt-get update -y
+apt-get upgrade -y
 apt-get install -y acl
 
-# Створення adminuser з паролем
-useradd -m adminuser
-echo "adminuser:adminuser" | chpasswd
+# === Create adminuser securely ===
+
+# Create user with home directory
+useradd -m -s /bin/bash adminuser
+
+# REMOVE password instead of setting plaintext one (secure way)
+passwd -d adminuser
+
+# Give sudo access
 usermod -aG sudo adminuser
 
-# Копіюємо SSH ключ з ubuntu
+# Copy SSH keys from ubuntu user
 mkdir -p /home/adminuser/.ssh
 cp /home/ubuntu/.ssh/authorized_keys /home/adminuser/.ssh/
-chown -R adminuser:adminuser /home/adminuser/.ssh
 chmod 700 /home/adminuser/.ssh
 chmod 600 /home/adminuser/.ssh/authorized_keys
+chown -R adminuser:adminuser /home/adminuser/.ssh
 
-# Створення poweruser без пароля
-useradd -m poweruser
+# === Create poweruser without password ===
+useradd -m -s /bin/bash poweruser
 passwd -d poweruser
 
-# Дозвіл на iptables
-echo 'poweruser ALL=(ALL) NOPASSWD: /usr/sbin/iptables' >> /etc/sudoers
+# === Sudo permission ONLY for iptables ===
+echo "poweruser ALL=(ALL) NOPASSWD: /usr/sbin/iptables" > /etc/sudoers.d/poweruser-iptables
+chmod 440 /etc/sudoers.d/poweruser-iptables
 
-# Доступ до home adminuser
+# === Allow poweruser to read adminuser home ===
 chmod 750 /home/adminuser
 setfacl -m u:poweruser:rx /home/adminuser
 
-# Символічне посилання
+# === Create symlink ===
 ln -s /etc/mtab /home/poweruser/mtab_link
+chown -h poweruser:poweruser /home/poweruser/mtab_link

@@ -2,9 +2,9 @@
 aws ec2 run-instances \
   --image-id ami-053b0d53c279acc90 \
   --count 1 \
-  --instance-type t2.micro \
-  --key-name mykeylabak \
-  --security-group-ids sg-0675a190bdc57ffe0 \
-  --subnet-id subnet-0ff5acba047b6e671 \
-  --iam-instance-profile Name=adminEC2Profile \
-  --user-data file://scriptthree.sh
+  --instance-type t3.micro \
+  --key-name mykeylabak2 \
+  --security-group-ids sg-0b300b53d7385c546 \
+  --subnet-id subnet-06b1b42e34afc9fa8 \
+  --iam-instance-profile Name="adminEC2Role" \
+  --user-data file://scriptthree.s

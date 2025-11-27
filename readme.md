@@ -1,34 +1,42 @@
-## Hometask #4 AWS task:
-- create AWS ec2 instance using ubuntu 22.04 image ami-053b0d53c279acc90
-- create user “adminuser”
-- set password for “adminuser” (in secure way! see documentation)
-- grant for “adminuser” sudoer permission
-- create user “poweruser”
-- allow poweruser login without password (see /etc/passwd manual)
-- grant for “poweruser” permission for iptables command (see /etc/sudoers
-man)
-- allow ONLY “poweruser” to read home directory of “adminuser”
-- create softlink to file /etc/mtab in poweruser home directory (see ln manual)
+# Hometask #4  
+**Telesko Vladislav**  
+**Group: 4CS-41**
+
+# This Hometask deploys an AWS EC2 instance (Ubuntu 22.04) and configures system users and permissions according to requirements
+* Create user adminuser
+* Set password for adminuser (secure method)
+* Grant sudo permissions to adminuser
+* Create user poweruser
+* Allow passwordless login for poweruser (edit /etc/passwd)
+* Allow only poweruser to read /home/adminuser
+* Grant poweruser permission to use iptables (via /etc/sudoers)
+* Create a softlink to /etc/mtab inside poweruser’s home directory
 
 ## How to start
-1. ./AWSinstance.sh
+1. aws ec2 run-instances --image-id ami-053b0d53c279acc90 --count 1 --instance-type t3.micro --key-name mykeylabak2 --security-group-ids sg-0b300b53d7385c546 --subnet-id subnet-06b1b42e34afc9fa8 --iam-instance-profile Name="adminEC2Role" --user-data file://scriptthree.sh
+- creates EC2 instance
+- configures users
+- sets permissions
+- creates symlink
+- applies sudo rules
 
-2. ssh -i "D:/urok/Mine_from_Univer_or_School/itstepuniver/ThirdCourse/IHT/KeyPem/mykeylabak.pem" adminuser@<your-ip>
+2. отримаємо IP адресу aws ec2 describe-instances --query "Reservations[*].Instances[*].[InstanceId,State.Name,PublicIpAddress]" --output table
 
-3. Перевірка користувачів:
+3. Заходим в bash ssh -i "D:/urok/Mine_from_Univer_or_School/itstepuniver/ThirdCourse/IHT/KeyPem/mykeylabak2.pem" ubuntu@<your-ip>
+
+4. Перевірка користувачів:
 grep adminuser /etc/passwd
 grep poweruser /etc/passwd
 
-4. Спроба логіну під poweruser (без пароля):
-sudo su - poweruser
-
 5. Спроба перегляду домашньої директорії adminuser:
-ls /home/adminuser
+ls -ld /home/adminuser
+ls -ld /home/poweruser
 
 6. Симлінк до /etc/mtab:
-ls -l /home/poweruser/mtab_link
+ls -l /etc/mtab
+- su - poweruser (для заходу в poweruser)
 
 7. Перевірка iptables для poweruser:
 sudo /usr/sbin/iptables -L
 
-* vim /var/log/cloud-init-output.log
+8. перевірка софтлінку ls -l /home/poweruser
