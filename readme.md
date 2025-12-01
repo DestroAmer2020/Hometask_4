@@ -2,41 +2,46 @@
 **Telesko Vladislav**  
 **Group: 4CS-41**
 
-# This Hometask deploys an AWS EC2 instance (Ubuntu 22.04) and configures system users and permissions according to requirements
-* Create user adminuser
-* Set password for adminuser (secure method)
-* Grant sudo permissions to adminuser
-* Create user poweruser
-* Allow passwordless login for poweruser (edit /etc/passwd)
-* Allow only poweruser to read /home/adminuser
-* Grant poweruser permission to use iptables (via /etc/sudoers)
-* Create a softlink to /etc/mtab inside poweruser’s home directory
+## Description
+This task creates and configures two users on an AWS EC2 Ubuntu instance adminuser (sudo) and poweruser (restricted).
+
+## Requirements Implemented
+Create user adminuser
+Set a password for adminuser
+Grant adminuser sudo permissions
+Create user poweruser
+Allow passwordless login for poweruser
+Allow poweruser to access /home/adminuser
+Allow poweruser to run only iptables with sudo
+Create a symlink to /etc/mtab inside /home/poweruser
 
 ## How to start
-1. aws ec2 run-instances --image-id ami-053b0d53c279acc90 --count 1 --instance-type t3.micro --key-name mykeylabak2 --security-group-ids sg-0b300b53d7385c546 --subnet-id subnet-06b1b42e34afc9fa8 --iam-instance-profile Name="adminEC2Role" --user-data file://scriptthree.sh
-- creates EC2 instance
-- configures users
-- sets permissions
-- creates symlink
-- applies sudo rules
+1. Launch EC2 instance: ./AWSinstance.sh
 
-2. отримаємо IP адресу aws ec2 describe-instances --query "Reservations[*].Instances[*].[InstanceId,State.Name,PublicIpAddress]" --output table
+2. Get public IP: aws ec2 describe-instances --query "Reservations[*].Instances[*].[InstanceId,State.Name,PublicIpAddress]" --output table
 
-3. Заходим в bash ssh -i "D:/urok/Mine_from_Univer_or_School/itstepuniver/ThirdCourse/IHT/KeyPem/mykeylabak2.pem" ubuntu@<your-ip>
+3. Connect to instance: ssh -i "D:/urok/Mine_from_Univer_or_School/itstepuniver/ThirdCourse/IHT/KeyPem/mykeylabak2.pem" ubuntu@<your-ip>
 
-4. Перевірка користувачів:
+4. Check created users:
 grep adminuser /etc/passwd
 grep poweruser /etc/passwd
 
-5. Спроба перегляду домашньої директорії adminuser:
+5. Check sudo privileges:
+sudo -l -U adminuser
+sudo -l -U poweruser
+
+6. Passwordless login for poweruser
+sudo passwd -S poweruser
+
+7. Permissions of adminuser home adminuser:
 ls -ld /home/adminuser
-ls -ld /home/poweruser
 
-6. Симлінк до /etc/mtab:
-ls -l /etc/mtab
-- su - poweruser (для заходу в poweruser)
+8. Check access from poweruser:
+su - poweruser
+cd /home/adminuser
+ls -la
 
-7. Перевірка iptables для poweruser:
-sudo /usr/sbin/iptables -L
+9. Symlink verification
+ls -l /home/poweruser/mtab_link
 
-8. перевірка софтлінку ls -l /home/poweruser
+iptables sudo check: sudo /usr/sbin/iptables -L

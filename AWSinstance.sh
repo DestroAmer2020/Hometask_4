@@ -7,4 +7,4 @@ aws ec2 run-instances \
   --security-group-ids sg-0b300b53d7385c546 \
   --subnet-id subnet-06b1b42e34afc9fa8 \
   --iam-instance-profile Name="adminEC2Role" \
-  --user-data file://scriptthree.s
+  --user-data file://scriptthree.sh
