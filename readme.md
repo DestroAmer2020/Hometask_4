@@ -41,7 +41,8 @@ su - poweruser
 cd /home/adminuser
 ls -la
 
-9. Symlink verification
+9. Symlink verification (after creating ln we got this)
 ls -l /home/poweruser/mtab_link
 
+10. Check iptables Using Sudo
 iptables sudo check: sudo /usr/sbin/iptables -L
