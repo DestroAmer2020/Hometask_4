@@ -23,6 +23,7 @@ echo "poweruser ALL=(ALL) NOPASSWD: /usr/sbin/iptables" > /etc/sudoers.d/powerus
 chmod 440 /etc/sudoers.d/poweruser-iptables
 
 # === Allow only poweruser to read adminuser home (via group) ===
+usermod -aG adminuser poweruser
 chmod 750 /home/adminuser
 
 # === Create symlink ===
